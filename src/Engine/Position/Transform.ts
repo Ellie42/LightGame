@@ -1,6 +1,6 @@
 import Rotation from "./Rotation";
 import Vector2 from "./Vector2";
-import Matrix2d from "./Matrix2d";
+import {t_Matrix2x3} from "./Matrix2d";
 
 export default class Transform {
     position: Vector2 = new Vector2();
@@ -9,16 +9,20 @@ export default class Transform {
     /**
      * Return a matrix representation of the transform properties
      */
-    public get matrix(): number[] {
-        const identity = Matrix2d.identity;
+    public get matrix(): t_Matrix2x3 {
+        return <t_Matrix2x3>[
+            Math.cos(this.rotation.angleRadians),
+            Math.sin(this.rotation.angleRadians),
+            -Math.sin(this.rotation.angleRadians),
+            Math.cos(this.rotation.angleRadians),
+            this.position.x,
+            this.position.y,
+        ];
+    }
 
-        identity[0] = Math.cos(this.rotation.angleRadians);
-        identity[1] = Math.sin(this.rotation.angleRadians);
-        identity[2] = -Math.sin(this.rotation.angleRadians);
-        identity[3] = Math.cos(this.rotation.angleRadians);
-        identity[4] = this.position.x;
-        identity[5] = this.position.y;
-
-        return identity;
+    public get translationMatrix(): t_Matrix2x3 {
+        return <t_Matrix2x3>[
+            1, 0, 0, 1, this.position.x, this.position.y
+        ];
     }
 }

@@ -5,22 +5,34 @@ import engineConfig from "../config/engine";
 import Renderer from "./Render/Renderer";
 import GameCamera from "./Camera/GameCamera";
 import Input from "./Control/Input";
+import Physics from "./Physics/Physics";
+import Time from "./Time/Time";
+import DebugConfig from "./Config/DebugConfig";
 
 export default class LightGame {
-    private static readonly TARGET_FPS = 60;
+    public readonly renderer: Renderer;
+    public readonly camera: GameCamera;
+    public readonly input: Input;
+    public readonly physics: Physics;
+    public readonly layers = new Map<any, Canvas2d>();
+    public readonly defaultLayer: any;
+    public readonly time: Time;
+    public readonly debugConfig: DebugConfig;
 
-    public renderer: Renderer;
-    public camera: GameCamera;
-    public input: Input;
-    public layers = new Map<any, Canvas2d>();
-    public defaultLayer: any;
+    public get debugMode(): boolean {
+        return this.debugConfig.active;
+    }
+
+    private get _targetFps() {
+        return engineConfig.targetFps ? engineConfig.targetFps : 60;
+    }
 
     /**
      * Length of time in ms that a single frame should last
      * @private
      */
     private get _tickLength() {
-        return 1000 / LightGame.TARGET_FPS;
+        return 1000 / this._targetFps;
     }
 
     private _container: HTMLElement;
@@ -32,6 +44,9 @@ export default class LightGame {
         this.renderer = new Renderer(this);
         this.input = new Input();
         this._container = container;
+        this.physics = new Physics();
+        this.time = new Time(this._targetFps);
+        this.debugConfig = new DebugConfig(engineConfig.debug);
 
         this.defaultLayer = engineConfig.layers.defaultLayer;
 
@@ -89,7 +104,7 @@ export default class LightGame {
         //the current point in time.
         let numTicks = Math.floor(timeSinceLastTick / this._tickLength);
 
-        if (numTicks > LightGame.TARGET_FPS * 5) {
+        if (numTicks > this._targetFps * 5) {
             numTicks = 1;
         }
 
@@ -111,11 +126,19 @@ export default class LightGame {
      * @private
      */
     private _tick() {
+        this._debug();
+        this.physics.tick();
         this._sceneManager.tick();
         this.input.tick();
     }
 
     private _render() {
         this.renderer.render();
+    }
+
+    private _debug() {
+        if (this.input.isKeyPressed("o")) {
+            this.debugConfig.active = !this.debugConfig.active;
+        }
     }
 }

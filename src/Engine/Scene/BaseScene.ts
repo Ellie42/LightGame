@@ -5,6 +5,9 @@ import Canvas2d from "../../Canvas/Canvas2d";
 export default abstract class BaseScene {
     public game!: LightGame;
 
+    public get entities(){
+        return this._entities;
+    }
     private _entities: Entity[] = [];
 
     public tick(): void {
@@ -53,6 +56,7 @@ export default abstract class BaseScene {
 
         entity.layer = this.game.layers.get(layerId) as Canvas2d;
         entity.game = this.game;
+        entity.input = this.game.input;
         entity.start();
 
         this.game.renderer.register(entity);

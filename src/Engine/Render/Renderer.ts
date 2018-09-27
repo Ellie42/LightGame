@@ -4,7 +4,8 @@ import LightGame from "../LightGame";
 import Canvas2d from "../../Canvas/Canvas2d";
 import Matrix2d from "../Position/Matrix2d";
 import Entity from "../Entity/Entity";
-import Transform from "../Position/Transform";
+import BoxCollider from "../Physics/BoxCollider";
+import BaseCollider from "../Physics/BaseCollider";
 
 /**
  * Reponsible for calling the render() function on all entities that require rendering, and keeping track of
@@ -59,19 +60,27 @@ export default class Renderer {
 
             //Here we offset the canvas by the center pivot position of the entity so the rotation happens from
             //the center of the entity
-            canvas.context.setTransform.call(canvas.context, ...Matrix2d.translate(
+            canvas.context.setTransform(...Matrix2d.translate(
                 Matrix2d.MATRIX_IDENTITY, centerX, centerY
             ));
 
-            canvas.context.transform.call(canvas.context, ...transformableEntity.transform.matrix);
+            canvas.context.transform(...transformableEntity.transform.matrix);
 
             //Removing canvas offset
-            canvas.context.transform.call(canvas.context, ...Matrix2d.translate(
+            canvas.context.transform(...Matrix2d.translate(
                 Matrix2d.MATRIX_IDENTITY, -centerX, -centerY
             ));
         }
 
         entity.render();
+
+        if (this._game.debugMode && this._game.debugConfig.showColliders && (<Entity>entity).collider) {
+            const collider = (<Entity>entity).collider as BaseCollider;
+
+            canvas.context.setTransform(...collider.parent.transform.translationMatrix);
+
+            collider.render();
+        }
     }
 
     /**

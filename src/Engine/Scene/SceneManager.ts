@@ -7,6 +7,7 @@ export default class SceneManager {
     public set currentScene(scene: BaseScene) {
         this._currentScene = scene;
         this._currentScene.game = this._game;
+        this._game.physics.addScene(scene);
         this._currentScene.start();
     }
 

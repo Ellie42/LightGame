@@ -1,8 +1,20 @@
+import Transform from "./Transform";
+
+export type t_Matrix2x3 = [number, number, number, number, number, number];
+export type t_Matrix1x2 = [number, number];
+
 export default class Matrix2d {
-    static readonly MATRIX_IDENTITY: [number, number, number, number, number, number] = [1, 0, 0, 1, 0, 0];
+    static readonly MATRIX_IDENTITY: t_Matrix2x3 = [1, 0, 0, 1, 0, 0];
 
     static get identity() {
-        return Array.from(Matrix2d.MATRIX_IDENTITY);
+        return [
+            Matrix2d.MATRIX_IDENTITY[0],
+            Matrix2d.MATRIX_IDENTITY[1],
+            Matrix2d.MATRIX_IDENTITY[2],
+            Matrix2d.MATRIX_IDENTITY[3],
+            Matrix2d.MATRIX_IDENTITY[4],
+            Matrix2d.MATRIX_IDENTITY[5],
+        ]
     }
 
     /**
@@ -10,7 +22,7 @@ export default class Matrix2d {
      * @param mat
      * @param other
      */
-    static multiply(mat: number[], other: number[]) {
+    static multiply(mat: t_Matrix2x3, other: t_Matrix2x3): t_Matrix2x3 {
         return [
             mat[0] * other[0] + mat[1] * mat[2],
             mat[1] * other[0] + mat[1] * mat[3],
@@ -26,10 +38,10 @@ export default class Matrix2d {
      * @param matrix
      * @param degrees
      */
-    static rotate(matrix: number[], degrees: number) {
+    static rotate(matrix: t_Matrix2x3, degrees: number): t_Matrix2x3 {
         let radians = degrees * (Math.PI / 180);
 
-        let rotationMatrix = [
+        let rotationMatrix = <t_Matrix2x3>[
             Math.cos(radians),
             Math.sin(radians),
             -Math.sin(radians),
@@ -46,7 +58,11 @@ export default class Matrix2d {
      * @param x
      * @param y
      */
-    static translate(matrix: number[], x: number, y: number): number[] {
+    static translate(matrix: t_Matrix2x3, x: number, y: number): t_Matrix2x3 {
         return Matrix2d.multiply(matrix, [1, 0, 0, 1, x, y]);
+    }
+
+    static multiply1x2(position: t_Matrix1x2, other: t_Matrix2x3): t_Matrix1x2 {
+        return position;
     }
 }
