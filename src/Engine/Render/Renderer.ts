@@ -24,7 +24,6 @@ export default class Renderer {
      * Render all entities in the queue in order of zIndex
      */
     public render() {
-
         this._renderQueue.forEach((layer, layerId) => {
             let canvas = (this._game.layers.get(layerId) as Canvas2d);
 

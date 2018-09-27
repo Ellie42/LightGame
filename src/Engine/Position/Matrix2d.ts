@@ -37,7 +37,7 @@ export default class Matrix2d {
             0, 0
         ];
 
-        return Matrix2d.multiply(rotationMatrix, matrix);
+        return Matrix2d.multiply(matrix, rotationMatrix);
     }
 
     /**
