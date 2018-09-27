@@ -37,5 +37,7 @@ export default class Player extends Entity {
         }
 
         this.transform.position.add(this._momentum);
+
+        // this.transform.rotation.angle += 7;
     }
 }

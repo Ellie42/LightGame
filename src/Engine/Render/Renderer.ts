@@ -4,6 +4,7 @@ import LightGame from "../LightGame";
 import Canvas2d from "../../Canvas/Canvas2d";
 import Matrix2d from "../Position/Matrix2d";
 import Entity from "../Entity/Entity";
+import Transform from "../Position/Transform";
 
 /**
  * Reponsible for calling the render() function on all entities that require rendering, and keeping track of
@@ -54,23 +55,21 @@ export default class Renderer {
         if ((<Entity>entity).transform) {
             const transformableEntity = <Entity>entity;
 
-            canvas.context.translate(
-                transformableEntity.transform.position.x,
-                transformableEntity.transform.position.y
-            );
-
-            //Here we rotate the object around it's center point as defined by the bounds property
-            //this may not be accurate to the actual rendered image as it is currently specified manually.
             let centerX = transformableEntity.bounds.width / 2;
             let centerY = transformableEntity.bounds.height / 2;
 
-            canvas.context.translate(centerX, centerY);
+            //Here we offset the canvas by the center pivot position of the entity so the rotation happens from
+            //the center of the entity
+            canvas.context.setTransform.call(canvas.context, ...Matrix2d.translate(
+                Matrix2d.MATRIX_IDENTITY, centerX, centerY
+            ));
 
-            canvas.context.rotate(
-                transformableEntity.transform.rotation.angleRadians
-            );
+            canvas.context.transform.call(canvas.context, ...transformableEntity.transform.matrix);
 
-            canvas.context.translate(-centerX, -centerY);
+            //Removing canvas offset
+            canvas.context.transform.call(canvas.context, ...Matrix2d.translate(
+                Matrix2d.MATRIX_IDENTITY, -centerX, -centerY
+            ));
         }
 
         entity.render();
