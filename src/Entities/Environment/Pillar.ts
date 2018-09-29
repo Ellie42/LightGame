@@ -1,13 +1,13 @@
 import Entity from "../../Engine/Entity/Entity";
 import CircleCollider from "../../Engine/Physics/CircleCollider";
 import Vector2 from "../../Engine/Position/Vector2";
-import Bounds from "../../Engine/Physics/Bounds";
+import Dimensions from "../../Engine/Physics/DImensions";
 import {Tag} from "../../config/engine";
 
 export default class Pillar extends Entity {
     public readonly tag = Tag.Environment;
-    public readonly collider: CircleCollider = new CircleCollider(this, 50);
-    public readonly bounds = new Bounds(50, 50);
+    // public readonly collider: CircleCollider = new CircleCollider(this, 50);
+    public readonly bounds = new Dimensions(50, 50);
 
     public start() {
         this.transform.position = new Vector2(500, 100);

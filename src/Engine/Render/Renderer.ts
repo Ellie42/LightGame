@@ -4,7 +4,7 @@ import LightGame from "../LightGame";
 import Canvas2d from "../../Canvas/Canvas2d";
 import Matrix2d from "../Position/Matrix2d";
 import Entity from "../Entity/Entity";
-import BoxCollider from "../Physics/BoxCollider";
+import BoundingBoxCollider from "../Physics/BoundingBoxCollider";
 import BaseCollider from "../Physics/BaseCollider";
 
 /**
@@ -52,6 +52,7 @@ export default class Renderer {
         //Reset the canvas transforms so we don't use the transforms of previously rendered entities
         canvas.reset();
 
+        //TODO move all these calculations into the transform, we don't need the canvas for this anymore
         if ((<Entity>entity).transform) {
             const transformableEntity = <Entity>entity;
 
@@ -64,7 +65,7 @@ export default class Renderer {
                 Matrix2d.MATRIX_IDENTITY, centerX, centerY
             ));
 
-            canvas.context.transform(...transformableEntity.transform.matrix);
+            canvas.context.transform(...transformableEntity.transform.canvasMatrix);
 
             //Removing canvas offset
             canvas.context.transform(...Matrix2d.translate(

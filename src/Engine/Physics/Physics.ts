@@ -2,7 +2,7 @@ import BaseScene from "../Scene/BaseScene";
 import GameObject from "../Entity/GameObject";
 import Collision from "./Collision";
 import BaseCollider from "./BaseCollider";
-import BoxCollider from "./BoxCollider";
+import BoundingBoxCollider from "./BoundingBoxCollider";
 import CircleCollider from "./CircleCollider";
 import Vector2 from "../Position/Vector2";
 
@@ -81,20 +81,22 @@ export default class Physics {
             }
         }
 
-        if(collisions.length > 0){
+        if (collisions.length > 0) {
             return collisions;
         }
 
         return null;
     }
 
-    static boxToCircleCollision(box: BoxCollider, circle: CircleCollider, target?: GameObject): Collision | null {
+    static boundingBoxToCircleCollision(box: BoundingBoxCollider, circle: CircleCollider, target?: GameObject): Collision | null {
         if (!target) {
             target = circle.parent;
         }
 
-        let dX = circle.centerX - Math.max(box.left, Math.min(circle.centerX, box.right));
-        let dY = circle.centerY - Math.max(box.top, Math.min(circle.centerY, box.bottom));
+        const boxB = box.boxBounds(true);
+
+        let dX = circle.centerX - Math.max(boxB.topLeft[0], Math.min(circle.centerX, boxB.topRight[0]));
+        let dY = circle.centerY - Math.max(boxB.topLeft[1], Math.min(circle.centerY, boxB.bottomLeft[1]));
 
         if ((dX * dX + dY * dY) < ((circle.size / 2) * (circle.size / 2))) {
             return new Collision(target);
@@ -117,11 +119,14 @@ export default class Physics {
         return null;
     }
 
-    static boxToBoxCollision(a: BoxCollider, b: BoxCollider): Collision | null {
-        if (!(a.right < b.left ||
-            a.bottom < b.top ||
-            a.left > b.right ||
-            a.top > b.bottom)) {
+    static boundingBoxToboundingBoxCollision(a: BoundingBoxCollider, b: BoundingBoxCollider): Collision | null {
+        const ab = a.boxBounds(true);
+        const bb = b.boxBounds(true);
+
+        if (!(ab.topRight[0] < bb.topLeft[0] ||
+            ab.bottomLeft[1] < bb.topLeft[1] ||
+            ab.topLeft[0] > bb.topRight[0] ||
+            ab.topLeft[1] > bb.bottomLeft[1])) {
             return new Collision(b.parent);
         }
 

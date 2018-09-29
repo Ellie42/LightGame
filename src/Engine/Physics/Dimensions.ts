@@ -1,4 +1,4 @@
-export default class Bounds {
+export default class Dimensions {
     public width: number = 0;
     public height: number = 0;
 

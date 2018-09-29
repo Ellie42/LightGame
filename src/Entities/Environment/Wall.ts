@@ -1,15 +1,15 @@
 import Entity from "../../Engine/Entity/Entity";
 import {Tag} from "../../config/engine";
-import BoxCollider from "../../Engine/Physics/BoxCollider";
+import BoundingBoxCollider from "../../Engine/Physics/BoundingBoxCollider";
 
 export default class Wall extends Entity {
     public readonly tag = Tag.Environment;
-    public readonly collider: BoxCollider;
+    public readonly collider: BoundingBoxCollider;
 
     constructor(x: number, y: number, width: number, height: number) {
         super();
 
-        this.collider = new BoxCollider(this);
+        this.collider = new BoundingBoxCollider(this);
         this.transform.position.x = x;
         this.transform.position.y = y;
         this.bounds.width = width;

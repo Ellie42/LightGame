@@ -3,7 +3,7 @@ import GameObject from "../Entity/GameObject";
 import Collision from "./Collision";
 import Vector2 from "../Position/Vector2";
 import Physics from "./Physics";
-import BoxCollider from "./BoxCollider";
+import BoundingBoxCollider from "./BoundingBoxCollider";
 
 export default class CircleCollider extends BaseCollider {
     public readonly size: number;
@@ -47,7 +47,7 @@ export default class CircleCollider extends BaseCollider {
     calculateCollision(otherC: BaseCollider): Collision | null {
         switch (otherC.type) {
             case ColliderType.Box:
-                return Physics.boxToCircleCollision(<BoxCollider>otherC, this, otherC.parent);
+                return Physics.boundingBoxToCircleCollision(<BoundingBoxCollider>otherC, this, otherC.parent);
             case ColliderType.Circle:
                 return Physics.circleToCircleCollision(<CircleCollider>otherC, this);
         }

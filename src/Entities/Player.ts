@@ -1,8 +1,8 @@
 import Entity from "../Engine/Entity/Entity";
 import Vector2 from "../Engine/Position/Vector2";
-import Bounds from "../Engine/Physics/Bounds";
+import Dimensions from "../Engine/Physics/DImensions";
 import {Tag} from "../config/engine";
-import BoxCollider from "../Engine/Physics/BoxCollider";
+import BoundingBoxCollider from "../Engine/Physics/BoundingBoxCollider";
 import CircleCollider from "../Engine/Physics/CircleCollider";
 
 export default class Player extends Entity {
@@ -17,7 +17,7 @@ export default class Player extends Entity {
         this.bounds.width = 50;
         this.bounds.height = 25;
         // this.collider = new CircleCollider(this, 25);
-        this.collider = new BoxCollider(this);
+        this.collider = new BoundingBoxCollider(this);
     }
 
     public start() {
@@ -49,8 +49,8 @@ export default class Player extends Entity {
             this._momentum.set(-this._speed, 0);
         }
 
-        // this.transform.position.add(Vector2.times(this._momentum, this.game.time.perSecond));
-        this.transform.rotation.angle += 90 * this.game.time.perSecond;
+        this.transform.position.add(Vector2.times(this._momentum, this.game.time.perSecond));
+        // this.transform.rotation.angle += 90 * this.game.time.perSecond;
 
         const collisions = this.game.physics.colliding(this, Tag.Environment);
 
