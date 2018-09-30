@@ -1,6 +1,11 @@
 export default class Vector2 {
-    x: number = 0;
-    y: number = 0;
+    static readonly Up = new Vector2(0, -1);
+    static readonly Down = new Vector2(0, 1);
+    static readonly Left = new Vector2(-1, 0);
+    static readonly Right = new Vector2(1, 0);
+
+    public x: number = 0;
+    public y: number = 0;
 
     constructor(x: number = 0, y: number = 0) {
         this.set(x, y);
@@ -11,6 +16,13 @@ export default class Vector2 {
         this.y += other.y;
 
         return this;
+    }
+
+    public static add(a: Vector2, b: Vector2) {
+        return new Vector2(
+            a.x + b.x,
+            a.y + b.y
+        );
     }
 
     set(x: number = 0, y: number = 0) {

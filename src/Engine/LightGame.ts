@@ -19,6 +19,10 @@ export default class LightGame {
     public readonly time: Time;
     public readonly debugConfig: DebugConfig;
 
+    public get currentScene(){
+        return this._sceneManager.currentScene;
+    }
+
     public get debugMode(): boolean {
         return this.debugConfig.active;
     }

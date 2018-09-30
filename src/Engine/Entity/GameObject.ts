@@ -3,12 +3,14 @@ import Dimensions from "../Physics/DImensions";
 import Matrix2d from "../Position/Matrix2d";
 import BaseCollider from "../Physics/BaseCollider";
 import Canvas2d from "../../Canvas/Canvas2d";
+import BaseScene from "../Scene/BaseScene";
 
 export default class GameObject {
     public transform: Transform;
     public bounds: Dimensions;
     public collider?: BaseCollider;
     public layer!: Canvas2d;
+    public scene!: BaseScene;
 
     constructor(){
         this.transform = new Transform();

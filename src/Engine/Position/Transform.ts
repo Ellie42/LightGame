@@ -1,6 +1,14 @@
 import Rotation from "./Rotation";
 import Vector2 from "./Vector2";
 
+//TODO move this to types.d.ts, for some reason, declaring it there isn't working :(
+export enum Direction {
+    Up,
+    Down,
+    Left,
+    Right
+}
+
 export default class Transform {
     position: Vector2 = new Vector2();
     rotation: Rotation = new Rotation();

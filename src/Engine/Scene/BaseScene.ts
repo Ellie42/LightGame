@@ -57,6 +57,7 @@ export default abstract class BaseScene {
         entity.layer = this.game.layers.get(layerId) as Canvas2d;
         entity.game = this.game;
         entity.input = this.game.input;
+        entity.scene = this;
         entity.start();
 
         this.game.renderer.register(entity);
