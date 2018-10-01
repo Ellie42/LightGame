@@ -1,10 +1,8 @@
 import BaseScene from "../Engine/Scene/BaseScene";
-import Entity from "../Engine/Entity/Entity";
 import Player from "../Entities/Player";
 import {Layer} from "../config/engine";
 import PlainBackground from "../Entities/Backgrounds/PlainBackground";
 import Wall from "../Entities/Environment/Wall";
-import Pillar from "../Entities/Environment/Pillar";
 
 export default class DevScene extends BaseScene {
     private _player!: Player;

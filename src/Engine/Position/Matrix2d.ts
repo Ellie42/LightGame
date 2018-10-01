@@ -1,5 +1,3 @@
-import Transform from "./Transform";
-
 export default class Matrix2d {
     static readonly MATRIX_IDENTITY: t_Matrix2x3 = [1, 0, 0, 1, 0, 0];
 

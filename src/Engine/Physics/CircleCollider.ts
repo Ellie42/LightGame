@@ -1,7 +1,6 @@
 import BaseCollider, {ColliderType} from "./BaseCollider";
 import GameObject from "../Entity/GameObject";
 import Collision from "./Collision";
-import Vector2 from "../Position/Vector2";
 import Physics from "./Physics";
 import BoundingBoxCollider from "./BoundingBoxCollider";
 

@@ -4,7 +4,6 @@ import LightGame from "../LightGame";
 import Canvas2d from "../../Canvas/Canvas2d";
 import Matrix2d from "../Position/Matrix2d";
 import Entity from "../Entity/Entity";
-import BoundingBoxCollider from "../Physics/BoundingBoxCollider";
 import BaseCollider from "../Physics/BaseCollider";
 
 /**

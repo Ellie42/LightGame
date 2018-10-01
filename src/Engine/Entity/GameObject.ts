@@ -1,6 +1,5 @@
 import Transform from "../Position/Transform";
 import Dimensions from "../Physics/DImensions";
-import Matrix2d from "../Position/Matrix2d";
 import BaseCollider from "../Physics/BaseCollider";
 import Canvas2d from "../../Canvas/Canvas2d";
 import BaseScene from "../Scene/BaseScene";
