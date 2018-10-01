@@ -10,11 +10,11 @@ export default class CircleCollider extends BaseCollider {
     public readonly type = ColliderType.Circle;
 
     public get centerX() {
-        return this.parent.transform.position.x + this.parent.bounds.width / 2;
+        return this.parent.transform.position.x + this.parent.dimensions.width / 2;
     }
 
     public get centerY() {
-        return this.parent.transform.position.y + this.parent.bounds.height / 2;
+        return this.parent.transform.position.y + this.parent.dimensions.height / 2;
     }
 
     constructor(parent: GameObject, size: number) {
@@ -32,8 +32,8 @@ export default class CircleCollider extends BaseCollider {
         ctx.beginPath();
 
         ctx.arc(
-            this.parent.bounds.width / 2,
-            this.parent.bounds.height / 2,
+            this.parent.dimensions.width / 2,
+            this.parent.dimensions.height / 2,
             this.size / 2,
             0,
             2 * Math.PI
@@ -46,7 +46,7 @@ export default class CircleCollider extends BaseCollider {
 
     calculateCollision(otherC: BaseCollider): Collision | null {
         switch (otherC.type) {
-            case ColliderType.Box:
+            case ColliderType.BoundingBox:
                 return Physics.boundingBoxToCircleCollision(<BoundingBoxCollider>otherC, this, otherC.parent);
             case ColliderType.Circle:
                 return Physics.circleToCircleCollision(<CircleCollider>otherC, this);

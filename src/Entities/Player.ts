@@ -8,10 +8,10 @@ import Trail from "./Trails/Trail";
 export default class Player extends Entity {
     public readonly tag = Tag.Player;
 
-    private _speed = 200;
+    private _speed = 50;
     private _momentum: Vector2;
     private _prevDirection: Direction;
-    private _direction: Direction;
+    private _direction!: Direction;
     private _trail: Trail;
 
     constructor() {
@@ -19,13 +19,21 @@ export default class Player extends Entity {
 
         this._momentum = new Vector2(this._speed);
         this._prevDirection = Direction.Right;
-        this._direction = Direction.Right;
-        this._trail = new Trail();
+        this._changeDirection(Direction.Right);
+        this._trail = new Trail(this);
 
-        this.bounds.width = 25;
-        this.bounds.height = 10;
+        this.dimensions.width = 20;
+        this.dimensions.height = 10;
         // this.collider = new CircleCollider(this, 25);
         this.collider = new BoundingBoxCollider(this);
+    }
+
+    public get trailPoint() : Vector2{
+        const center = this.center;
+        const backwards = Vector2.fromDirection(this._direction).invert();
+        const offset = backwards.times((this.dimensions.width / 2) + 1);
+
+        return Vector2.add(center, offset);
     }
 
     public start() {
@@ -47,11 +55,11 @@ export default class Player extends Entity {
         }
 
         this.layer.context.fillStyle = '#5cd3ff';
-        this.layer.context.fillRect(0, 0, this.bounds.width, this.bounds.height);
+        this.layer.context.fillRect(0, 0, this.dimensions.width, this.dimensions.height);
     }
 
     public get center(): Vector2 {
-        return Vector2.add(this.transform.position, new Vector2(this.bounds.width / 2, this.bounds.height / 2));
+        return Vector2.add(this.transform.position, new Vector2(this.dimensions.width / 2, this.dimensions.height / 2));
     }
 
     public tick() {
@@ -73,6 +81,8 @@ export default class Player extends Entity {
             this._trail.pushPoint(this.center);
         }
 
+        this._prevDirection = this._direction;
+
         // this.transform.rotation.angle += 90 * this.game.time.perSecond;
 
         const collisions = this.game.physics.colliding(this, Tag.Environment);
@@ -83,27 +93,21 @@ export default class Player extends Entity {
     }
 
     private _changeDirection(direction: Direction) {
-        this._prevDirection = this._direction;
-
         let newAngle = 0;
         let directionVector: Vector2;
 
         switch (direction) {
             case Direction.Up:
                 newAngle = 270;
-                directionVector = Vector2.Up;
                 break;
             case Direction.Left:
                 newAngle = 180;
-                directionVector = Vector2.Left;
                 break;
             case Direction.Right:
                 newAngle = 0;
-                directionVector = Vector2.Right;
                 break;
             case Direction.Down:
                 newAngle = 90;
-                directionVector = Vector2.Down;
                 break;
             default:
                 directionVector = new Vector2();
@@ -111,13 +115,18 @@ export default class Player extends Entity {
         }
 
         this.transform.rotation.angle = newAngle;
-        this._momentum = Vector2.times(directionVector, this._speed);
+        this._momentum = Vector2.times(Vector2.fromDirection(direction), this._speed);
         this._direction = direction;
+    }
+
+    public onLaserHit(trail: Trail) {
+        this._die();
     }
 
     private _die() {
         this.transform.position.set(100, 100);
         this._trail.clear();
         this._initTrail();
+        this._changeDirection(Direction.Right);
     }
 }

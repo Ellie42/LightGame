@@ -7,7 +7,7 @@ import CircleCollider from "./CircleCollider";
 import Matrix2x2 from "../Position/Matrix2x2";
 
 export default class BoundingBoxCollider extends BaseCollider {
-    public readonly type = ColliderType.Box;
+    public readonly type = ColliderType.BoundingBox;
     private _bounds: Dimensions;
 
     render() {
@@ -77,19 +77,23 @@ export default class BoundingBoxCollider extends BaseCollider {
             topLeft: [minX, minY],
             topRight: [maxX, minY],
             bottomRight: [maxX, maxY],
-            bottomLeft: [minX, maxY]
+            bottomLeft: [minX, maxY],
+            left: minX,
+            top: minY,
+            right: maxX,
+            bottom: maxY
         };
     }
 
     constructor(parent: GameObject) {
         super(parent);
-        this._bounds = parent.bounds;
+        this._bounds = parent.dimensions;
     }
 
 
     calculateCollision(otherC: BaseCollider): Collision | null {
         switch (otherC.type) {
-            case ColliderType.Box:
+            case ColliderType.BoundingBox:
                 return Physics.boundingBoxToboundingBoxCollision(this, <BoundingBoxCollider>otherC);
             case ColliderType.Circle:
                 return Physics.boundingBoxToCircleCollision(this, <CircleCollider>otherC);

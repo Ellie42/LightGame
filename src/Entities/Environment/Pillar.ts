@@ -7,7 +7,7 @@ import {Tag} from "../../config/engine";
 export default class Pillar extends Entity {
     public readonly tag = Tag.Environment;
     public readonly collider: CircleCollider = new CircleCollider(this, 50);
-    public readonly bounds = new Dimensions(50, 50);
+    public readonly dimensions = new Dimensions(50, 50);
 
     public start() {
         this.transform.position = new Vector2(500, 100);

@@ -12,8 +12,8 @@ export default class Wall extends Entity {
         this.collider = new BoundingBoxCollider(this);
         this.transform.position.x = x;
         this.transform.position.y = y;
-        this.bounds.width = width;
-        this.bounds.height = height;
+        this.dimensions.width = width;
+        this.dimensions.height = height;
     }
 
     render() {
@@ -22,6 +22,6 @@ export default class Wall extends Entity {
         }
 
         this.layer.context.fillStyle = '#f23a41';
-        this.layer.context.fillRect(0, 0, this.bounds.width, this.bounds.height);
+        this.layer.context.fillRect(0, 0, this.dimensions.width, this.dimensions.height);
     }
 }

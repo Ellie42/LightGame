@@ -5,6 +5,10 @@ declare interface Bounds {
     topRight: t_Vector2
     bottomRight: t_Vector2
     bottomLeft: t_Vector2
+    top: number
+    left: number
+    right: number
+    bottom: number
 }
 
 declare type t_Matrix1x2 = [

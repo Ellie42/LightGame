@@ -1,10 +1,15 @@
 import BaseScene from "../Scene/BaseScene";
 import GameObject from "../Entity/GameObject";
 import Collision from "./Collision";
-import BaseCollider from "./BaseCollider";
+import BaseCollider, {ColliderType} from "./BaseCollider";
 import BoundingBoxCollider from "./BoundingBoxCollider";
 import CircleCollider from "./CircleCollider";
 import Vector2 from "../Position/Vector2";
+import Ray from "./Raycasting/Ray";
+import Entity from "../Entity/Entity";
+// @ts-ignore
+import clip from "liang-barsky";
+import RayCollision from "./Raycasting/RayCollision";
 
 /**
  * Calculates all collisions for all entities in all scenes
@@ -45,41 +50,19 @@ export default class Physics {
      * @param tagMask
      * @param layerMask
      */
-    colliding(object: GameObject, tagMask: number = 1 << 32, layerMask: number = 1 << 32): Collision[] | null {
+    colliding(object: GameObject, tagMask: number = 0xFFFFFF, layerMask: number = 0xFFFFFF): Collision[] | null {
         const collisions: Collision[] = [];
-        //Iterate all loaded scenes as it might be possible to have multiple scenes loaded at once in the future
-        //with cross-scene collision
-        for (const scene of this._loadedScenes) {
-            let i = 0;
-            const entities = scene.entities;
-            const entityCount = entities.length;
 
-            for (; i < entityCount; i++) {
-                //If the other entity in the list does not have a collider then nothing to check
-                if (!entities[i].collider) {
-                    continue;
-                }
+        this._iterateMatchingEntities((entity) => {
+            const objC = <BaseCollider>object.collider;
+            const otherC = <BaseCollider>entity.collider;
 
-                //If entity does not match any tags
-                if (!(entities[i].tag & tagMask)) {
-                    continue;
-                }
+            const collision = objC.calculateCollision(otherC);
 
-                //If entity does not match any layers
-                if (!(entities[i].layer.id & layerMask)) {
-                    continue;
-                }
-
-                const objC = <BaseCollider>object.collider;
-                const otherC = <BaseCollider>entities[i].collider;
-
-                const collision = objC.calculateCollision(otherC);
-
-                if (collision) {
-                    collisions.push(collision);
-                }
+            if (collision) {
+                collisions.push(collision);
             }
-        }
+        }, tagMask, layerMask);
 
         if (collisions.length > 0) {
             return collisions;
@@ -128,6 +111,73 @@ export default class Physics {
             ab.topLeft[0] > bb.topRight[0] ||
             ab.topLeft[1] > bb.bottomLeft[1])) {
             return new Collision(b.parent);
+        }
+
+        return null;
+    }
+
+    raycast(ray: Ray, tagMask = 0xFFFFFF, layerMask = 0xFFFFFF): RayCollision[] | null {
+        const collisions: RayCollision[] = [];
+
+        this._iterateMatchingEntities((entity) => {
+            if (!entity.collider) {
+                return;
+            }
+
+            switch (entity.collider.type) {
+                case ColliderType.BoundingBox:
+                    const result = Physics.rayToBoundingBoxCollision(ray, entity.collider as BoundingBoxCollider);
+                    if (result) {
+                        collisions.push(result);
+                    }
+                    break;
+            }
+
+        }, tagMask, layerMask);
+
+        if(collisions.length > 0){
+            return collisions;
+        }
+
+        return null;
+    }
+
+    private _iterateMatchingEntities(cb: (entity: Entity) => void, tagMask: number, layerMask: number) {
+        //Iterate all loaded scenes as it might be possible to have multiple scenes loaded at once in the future
+        //with cross-scene collision
+        for (const scene of this._loadedScenes) {
+            let i = 0;
+            const entities = scene.entities;
+            const entityCount = entities.length;
+
+            for (; i < entityCount; i++) {
+                //If the other entity in the list does not have a collider then nothing to check
+                if (!entities[i].collider) {
+                    continue;
+                }
+
+                //If entity does not match any tags
+                if (!(entities[i].tag & tagMask)) {
+                    continue;
+                }
+
+                //If entity does not match any layers
+                if (!(entities[i].layer.id & layerMask)) {
+                    continue;
+                }
+
+                cb(entities[i]);
+            }
+        }
+    }
+
+    private static rayToBoundingBoxCollision(ray: Ray, collider: BoundingBoxCollider): RayCollision | null {
+        const bounds = collider.boxBounds(true);
+        const iclose: number[] = [], ifar: number[] = [];
+        const result = clip(ray.origin, ray.end, [bounds.left, bounds.top, bounds.right, bounds.bottom], iclose, ifar);
+
+        if (result) {
+            return new RayCollision(collider.parent, iclose, ifar);
         }
 
         return null;

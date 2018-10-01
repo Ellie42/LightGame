@@ -2,7 +2,7 @@ import GameObject from "../Entity/GameObject";
 import Collision from "./Collision";
 
 export enum ColliderType {
-    Box, Circle
+    BoundingBox, Circle, Line
 }
 
 export default abstract class BaseCollider {

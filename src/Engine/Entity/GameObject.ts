@@ -7,14 +7,14 @@ import BaseScene from "../Scene/BaseScene";
 
 export default class GameObject {
     public transform: Transform;
-    public bounds: Dimensions;
+    public dimensions: Dimensions;
     public collider?: BaseCollider;
     public layer!: Canvas2d;
     public scene!: BaseScene;
 
     constructor(){
         this.transform = new Transform();
-        this.bounds = new Dimensions();
+        this.dimensions = new Dimensions();
     }
 
     /**

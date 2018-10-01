@@ -56,8 +56,8 @@ export default class Renderer {
         if ((<Entity>entity).transform) {
             const transformableEntity = <Entity>entity;
 
-            let centerX = transformableEntity.bounds.width / 2;
-            let centerY = transformableEntity.bounds.height / 2;
+            let centerX = transformableEntity.dimensions.width / 2;
+            let centerY = transformableEntity.dimensions.height / 2;
 
             //Here we offset the canvas by the center pivot position of the entity so the rotation happens from
             //the center of the entity
