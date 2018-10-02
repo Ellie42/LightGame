@@ -43,14 +43,17 @@ module.exports = {
         ]
     },
     resolve: {
-        extensions: ['.ts', '.js','.scss', '.json'],
+        extensions: ['.ts', '.js', '.scss', '.json'],
         alias: {
             '@': path.resolve(__dirname, 'src')
         }
     },
     devServer: {
+        host: "0.0.0.0",
         historyApiFallback: true,
         noInfo: true,
+        hot: false,
+        inline: false,
         contentBase: path.join(__dirname, 'public'),
         headers: {
             'Access-Control-Allow-Origin': '\*'
@@ -77,7 +80,7 @@ module.exports = {
 };
 
 if (process.env.NODE_ENV === 'production') {
-    module.exports.devtool = '#source-map'
+    module.exports.devtool = '#source-map';
     // http://vue-loader.vuejs.org/en/workflow/production.html
     module.exports.plugins = (module.exports.plugins || []).concat([
         new webpack.DefinePlugin({

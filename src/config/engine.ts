@@ -12,6 +12,12 @@ export enum Tag {
 
 export default <ILightEngineConfig>{
     targetFps: 60,
+    network: {
+        url: "ws://192.168.0.18:4545/",
+    },
+    player: {
+        name: "Sophie"
+    },
     debug: {
         active: true,
         showColliders: true

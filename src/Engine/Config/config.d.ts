@@ -8,8 +8,18 @@ declare interface ILightEngineDebugConfig {
     showColliders?: boolean
 }
 
+declare interface ILightEnginePlayerConfig {
+    name?: string
+}
+
+declare interface ILightEngineNetworkConfig {
+    url: string
+}
+
 declare interface ILightEngineConfig {
     targetFps?: number
-    debug: ILightEngineDebugConfig
+    debug?: ILightEngineDebugConfig
     layers: ILightEngineLayerConfig
+    player?: ILightEnginePlayerConfig
+    network?: ILightEngineNetworkConfig
 }

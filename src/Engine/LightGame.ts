@@ -8,6 +8,8 @@ import Input from "./Control/Input";
 import Physics from "./Physics/Physics";
 import Time from "./Time/Time";
 import DebugConfig from "./Config/DebugConfig";
+import PlayerData from "./Data/PlayerData";
+import Client from "./Network/Client";
 
 export default class LightGame {
     public readonly renderer: Renderer;
@@ -18,8 +20,10 @@ export default class LightGame {
     public readonly defaultLayer: any;
     public readonly time: Time;
     public readonly debugConfig: DebugConfig;
+    public readonly player: PlayerData;
+    public readonly network: Client;
 
-    public get currentScene(){
+    public get currentScene() {
         return this._sceneManager.currentScene;
     }
 
@@ -51,6 +55,12 @@ export default class LightGame {
         this.physics = new Physics();
         this.time = new Time(this._targetFps);
         this.debugConfig = new DebugConfig(engineConfig.debug);
+        this.player = new PlayerData();
+        this.network = new Client(engineConfig.network);
+
+        if (engineConfig.player && engineConfig.player.name) {
+            this.player.name = engineConfig.player.name;
+        }
 
         this.defaultLayer = engineConfig.layers.defaultLayer;
 
